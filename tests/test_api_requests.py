@@ -54,7 +54,7 @@ class TestRequestsCall(unittest.TestCase):
     def test_plotly_query(self, mock_get):
         result = plotly_query()
         self.assertEqual(result.json(), JSON_DATA)
-        self.failUnless(result.raise_for_status.called)
+        self.assertTrue(result.raise_for_status.called)
         self.assertEqual(mock_get.call_count, 1)
 
     @mock.patch(
@@ -77,35 +77,35 @@ class TestRequestsCall(unittest.TestCase):
         test_cases = [
             ['', [
                 'Invalid URL',
-                'No schema supplied',
+                'No scheme supplied',
                 'gettaddrinfo failed',
                 ['nodename nor servname provided, or not known',
-                 'Name or service not known']
+                 'Name or service not known',
+                 'No address associated with hostname']
             ]],
             ['typo://plotly.acme.com', [
                 'No connection adapters were found',
                 'gettaddrinfo failed',
                 ['nodename nor servname provided, or not known',
-                 'No connection adapters were found']
+                 'No connection adapters were found',
+                 'Servname not supported for ai_socktype']
             ]],
             ['https://doesntexist.plotly.systems', [
                 'Failed to establish a new connection',
                 'gettaddrinfo failed',
                 ['nodename nor servname provided, or not known',
-                 'Name or service not known']
+                 'Name or service not known',
+                 'Failed to establish a new connection',
+                 ]
             ]],
             ['https://expired.badssl.com', [
-                'Caused by SSLError(SSLError("bad handshake: Error([(',
-                'SSL routines',
-                'tls_process_server_certificate',
+                'Caused by SSLError(',
                 'certificate verify failed',
                 'gettaddrinfo: ',
                 "'104.154.89.105', 443"
             ]],
             ['https://self-signed.badssl.com', [
-                'Caused by SSLError(SSLError("bad handshake: Error([(',
-                'SSL routines',
-                'tls_process_server_certificate',
+                'Caused by SSLError(',
                 'certificate verify failed',
                 'gettaddrinfo',
                 "'104.154.89.105', 443"
@@ -132,9 +132,11 @@ class TestRequestsCall(unittest.TestCase):
                 else:
                     self.assertTrue(
                         (expected_message[0] in stdout) or
-                        (expected_message[1] in stdout),
-                        'url "{}"\nExpected\n"{}"\nor "{}"\nto be in:\n{}\n'.format(
-                            url, expected_message[0], expected_message[1], stdout)
+                        (expected_message[1] in stdout) or
+                        (expected_message[2] in stdout) or
+                        'url "{}"\nExpected\n"{}"\nor "{}"\nor "{}"\nto be in:\n{}\n'.format(
+                            url, expected_message[0], expected_message[1],
+                            expected_message[2], stdout)
                     )
 
 
