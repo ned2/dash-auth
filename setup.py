@@ -15,15 +15,11 @@ setup(
     description='Dash Authorization Package.',
     long_description=io.open('README.md', encoding='utf-8').read(),
     install_requires=[
-        'chart_studio>=1.0.0',
         'Flask>=1.0.2',
         'flask-compress',
         'flask-seasurf',
         'dash>=1.1.1',
         'requests',
-        'retrying',
-        'itsdangerous>=1.1.0',
-        'ua_parser'
     ],
     include_package_data=True,
     url='https://plotly.com/dash',
