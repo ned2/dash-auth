@@ -1,8 +1,6 @@
 import dash
-from dash.dependencies import Input, Output
+from dash import html, dcc, Input, Output
 import dash_auth
-import dash_html_components as html
-import dash_core_components as dcc
 
 # Keep this out of source code repository - save in a file or a database
 VALID_USERNAME_PASSWORD_PAIRS = {
